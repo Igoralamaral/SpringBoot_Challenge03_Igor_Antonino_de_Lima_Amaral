@@ -1,10 +1,9 @@
 package com.compassuol.sp.challenge.msusers.entities;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
 import lombok.*;
-import org.springframework.format.annotation.DateTimeFormat;
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.br.CPF;
 
 import java.util.Date;
 
@@ -12,7 +11,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class UserEntity {
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,13 +24,14 @@ public class UserEntity {
     private String lastName;
 
     @Column(nullable = false)
+    @CPF
     private String cpf;
 
     @Column(nullable = false)
     private Date birthdate;
 
     @Column(nullable = false, unique = true)
-    @Email(message = "Please provide a valid email address")
+    @Email(message = "Please provide a valid email")
     private String email;
 
     @Column(nullable = false, length = 6)
