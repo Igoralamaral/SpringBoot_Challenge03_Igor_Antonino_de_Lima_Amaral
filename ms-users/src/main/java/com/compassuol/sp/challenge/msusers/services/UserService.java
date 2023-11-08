@@ -1,9 +1,6 @@
 package com.compassuol.sp.challenge.msusers.services;
 
-import com.compassuol.sp.challenge.msusers.dtos.CredentialsDTO;
-import com.compassuol.sp.challenge.msusers.dtos.TokenDTO;
-import com.compassuol.sp.challenge.msusers.dtos.UserRequestDTO;
-import com.compassuol.sp.challenge.msusers.dtos.UserResponseDTO;
+import com.compassuol.sp.challenge.msusers.dtos.*;
 import com.compassuol.sp.challenge.msusers.entities.User;
 import com.compassuol.sp.challenge.msusers.factories.UserFactory;
 import com.compassuol.sp.challenge.msusers.factories.UserResponseDTOFactory;
@@ -80,6 +77,14 @@ public class UserService implements UserDetailsService {
         userRepository.save(userUpdated);
         var userDTO = createResponseUserDTO(user);
         return userDTO;
+    }
+
+    public String updatePassword(Long id, PasswordRequestDTO passwordRequestDTO) {
+        var user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+        String password = passwordEncoder.encode(passwordRequestDTO.getPassword());
+        user.setPassword(password);
+        userRepository.save(user);
+        return "Password updated with success";
     }
     
     public UserDetails authenticate(User user) {
