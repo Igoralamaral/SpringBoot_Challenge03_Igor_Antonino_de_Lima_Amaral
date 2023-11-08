@@ -77,8 +77,6 @@ public class UserService implements UserDetailsService {
     public UserResponseDTO updateUserById(Long id, UserRequestDTO userRequestDTO) throws ParseException {
         var user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
         var userUpdated = updateUser(userRequestDTO, user);
-        String password = passwordEncoder.encode(userRequestDTO.getPassword());
-        userUpdated.setPassword(password);
         userRepository.save(userUpdated);
         var userDTO = createResponseUserDTO(user);
         return userDTO;

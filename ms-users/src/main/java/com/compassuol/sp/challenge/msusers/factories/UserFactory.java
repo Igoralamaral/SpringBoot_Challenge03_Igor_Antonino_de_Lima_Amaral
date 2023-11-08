@@ -34,7 +34,6 @@ public class UserFactory {
         SimpleDateFormat birthday = new SimpleDateFormat("dd/MM/yyyy");
         var birthdayDate = birthday.parse(userRequestDTO.getBirthdate());
         user.setBirthdate(birthdayDate);
-        user.setPassword(userRequestDTO.getPassword());
         user.setEmail(userRequestDTO.getEmail());
 
         return user;
