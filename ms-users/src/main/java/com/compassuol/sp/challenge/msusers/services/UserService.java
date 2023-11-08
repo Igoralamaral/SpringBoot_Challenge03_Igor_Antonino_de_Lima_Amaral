@@ -62,6 +62,16 @@ public class UserService implements UserDetailsService {
             throw new RuntimeException("Password invalid");
         }
     }
+
+    public UserResponseDTO getUserById(Long id) {
+        var user = userRepository.findById(id);
+        if(user.isPresent()){
+            var userResponseDTO = createResponseUserDTOFromOptional(user);
+            return userResponseDTO;
+        }
+
+        throw new RuntimeException("User not found!");
+    }
     
     public UserDetails authenticate(User user) {
         UserDetails userDetails = loadUserByUsername(user.getEmail());

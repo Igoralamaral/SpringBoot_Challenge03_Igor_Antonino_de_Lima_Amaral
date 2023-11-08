@@ -35,4 +35,9 @@ public class UserController {
     public ResponseEntity<TokenDTO> login(@RequestBody CredentialsDTO credentialsDTO){
         return ResponseEntity.ok(userService.login(credentialsDTO));
     }
+
+    @GetMapping("/users/{id}")
+    public ResponseEntity<UserResponseDTO> getUserById(@PathVariable Long id){
+        return ResponseEntity.ok(userService.getUserById(id));
+    }
 }
