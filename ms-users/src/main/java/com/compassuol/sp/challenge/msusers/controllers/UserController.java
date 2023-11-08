@@ -41,5 +41,10 @@ public class UserController {
         return ResponseEntity.ok(userService.getUserById(id));
     }
 
+    @PutMapping("/users/{id}")
+    public ResponseEntity<UserResponseDTO> updateUserById(@PathVariable Long id, @RequestBody @Valid  UserRequestDTO userRequestDTO) throws ParseException {
+        return ResponseEntity.ok(userService.updateUserById(id, userRequestDTO));
+    }
+
 
 }
