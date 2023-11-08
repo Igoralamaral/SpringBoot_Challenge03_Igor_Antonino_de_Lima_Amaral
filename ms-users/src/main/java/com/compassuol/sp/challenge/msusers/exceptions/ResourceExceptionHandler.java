@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.sql.SQLIntegrityConstraintViolationException;
+import java.text.ParseException;
 import java.util.NoSuchElementException;
 
 @ControllerAdvice
@@ -24,7 +25,7 @@ public class ResourceExceptionHandler {
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<StandardError> ConstraintViolationException(ConstraintViolationException e, HttpServletRequest request) {
+    public ResponseEntity<StandardError> constraintViolationException(ConstraintViolationException e, HttpServletRequest request) {
         StandardError error = new StandardError();
         error.setStatus(HttpStatus.BAD_REQUEST.value());
         error.setError("Integrity violation");
@@ -33,7 +34,7 @@ public class ResourceExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<StandardError> MethodArgumentNotValidException(MethodArgumentNotValidException e, HttpServletRequest request) {
+    public ResponseEntity<StandardError> methodArgumentNotValidException(MethodArgumentNotValidException e, HttpServletRequest request) {
         StandardError error = new StandardError();
         error.setStatus(HttpStatus.BAD_REQUEST.value());
         error.setError("Integrity violation");
@@ -41,11 +42,28 @@ public class ResourceExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
     @ExceptionHandler(ParseException.class)
-    public ResponseEntity<StandardError> ParseException(ParseException e, HttpServletRequest request) {
+    public ResponseEntity<StandardError> parseException(ParseException e, HttpServletRequest request) {
         StandardError error = new StandardError();
         error.setStatus(HttpStatus.BAD_REQUEST.value());
         error.setError("Please insert a valid data in format dd/mm/yyyy");
         error.setMessage(e.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    }
+
+    @ExceptionHandler(InvalidCredentials.class)
+    public ResponseEntity<StandardError> invalidCredentials(InvalidCredentials e, HttpServletRequest request) {
+        StandardError error = new StandardError();
+        error.setStatus(HttpStatus.UNAUTHORIZED.value());
+        error.setError("incorrect email or password");
+        error.setMessage(e.getMessage());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
+    }
+    @ExceptionHandler(NoSuchElementException.class)
+    public ResponseEntity<StandardError> noSuchElementException(NoSuchElementException e, HttpServletRequest request) {
+        StandardError error = new StandardError();
+        error.setStatus(HttpStatus.NOT_FOUND.value());
+        error.setError("ID not found");
+        error.setMessage(e.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
 }

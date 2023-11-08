@@ -2,6 +2,7 @@ package com.compassuol.sp.challenge.msusers.services;
 
 import com.compassuol.sp.challenge.msusers.dtos.*;
 import com.compassuol.sp.challenge.msusers.entities.User;
+import com.compassuol.sp.challenge.msusers.exceptions.InvalidCredentials;
 import com.compassuol.sp.challenge.msusers.factories.UserFactory;
 import com.compassuol.sp.challenge.msusers.factories.UserResponseDTOFactory;
 import com.compassuol.sp.challenge.msusers.repositories.UserRepository;
@@ -20,8 +21,6 @@ import org.springframework.web.server.ResponseStatusException;
 import static com.compassuol.sp.challenge.msusers.factories.UserFactory.createUserFromDTO;
 import static com.compassuol.sp.challenge.msusers.factories.UserFactory.updateUser;
 import static com.compassuol.sp.challenge.msusers.factories.UserResponseDTOFactory.createResponseUserDTO;
-import static com.compassuol.sp.challenge.msusers.factories.UserResponseDTOFactory.createResponseUserDTOFromOptional;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
@@ -57,26 +56,20 @@ public class UserService implements UserDetailsService {
             String token = jwtService.tokenGenerate(user);
             return new TokenDTO(user.getEmail(), token);
 
-        }catch (UsernameNotFoundException e){
-            throw new ResponseStatusException( HttpStatus.UNAUTHORIZED, e.getMessage());
         }catch (RuntimeException e){
-            throw new RuntimeException("Password invalid");
+            throw new InvalidCredentials(e.getMessage());
         }
     }
 
     public UserResponseDTO getUserById(Long id) {
-        var user = userRepository.findById(id);
-        if(user.isPresent()){
-            var userResponseDTO = createResponseUserDTOFromOptional(user);
-            return userResponseDTO;
-        }
-
-        throw new RuntimeException("User not found!");
+        var user = userRepository.findById(id).get();
+        var userResponseDTO = createResponseUserDTO(user);
+        return userResponseDTO;
     }
 
     @Transactional
     public UserResponseDTO updateUserById(Long id, UserRequestDTO userRequestDTO) throws ParseException {
-        var user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+        var user = userRepository.findById(id).get();
         var userUpdated = updateUser(userRequestDTO, user);
         userRepository.save(userUpdated);
         var userDTO = createResponseUserDTO(user);
@@ -85,7 +78,7 @@ public class UserService implements UserDetailsService {
 
     @Transactional
     public String updatePassword(Long id, PasswordRequestDTO passwordRequestDTO) {
-        var user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+        var user = userRepository.findById(id).get();
         String password = passwordEncoder.encode(passwordRequestDTO.getPassword());
         user.setPassword(password);
         userRepository.save(user);

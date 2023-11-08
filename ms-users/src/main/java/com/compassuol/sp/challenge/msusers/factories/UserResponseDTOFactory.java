@@ -27,19 +27,4 @@ public class UserResponseDTOFactory {
 
         return userResponseDTO;
     }
-
-    public static UserResponseDTO createResponseUserDTOFromOptional(Optional<User> user){
-        UserResponseDTO userResponseDTO = new UserResponseDTO();
-        userResponseDTO.setId(user.get().getId());
-        userResponseDTO.setFirstName(user.get().getFirstName());
-        userResponseDTO.setLastName(user.get().getLastName());
-        userResponseDTO.setCpf(user.get().getCpf());
-        userResponseDTO.setEmail(user.get().getEmail());
-        DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-        String dateFormated = dateFormat.format(user.get().getBirthdate());
-        userResponseDTO.setBirthdate(dateFormated);
-        userResponseDTO.setActive(user.get().getActive());
-
-        return userResponseDTO;
-    }
 }
