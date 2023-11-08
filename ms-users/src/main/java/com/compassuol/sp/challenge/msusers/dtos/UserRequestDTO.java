@@ -18,6 +18,7 @@ import java.util.Date;
 public class UserRequestDTO {
 
     @Column(nullable = false)
+    @Size(min = 3, max = 255, message = "first name must have at least 3 characters")
     private String firstName;
 
     @Column(nullable = false)

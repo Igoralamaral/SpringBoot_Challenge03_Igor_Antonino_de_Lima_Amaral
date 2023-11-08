@@ -25,7 +25,7 @@ public class UserController {
 
     @PostMapping("/users")
     public ResponseEntity<UserResponseDTO> createUser(@RequestBody @Valid UserRequestDTO userRequestDTO) throws ParseException {
-        return ResponseEntity.ok(userService.createUser(userRequestDTO));
+        return ResponseEntity.status(HttpStatus.CREATED).body(userService.createUser(userRequestDTO));
     }
 
     @PostMapping("/login")
@@ -47,6 +47,4 @@ public class UserController {
     public ResponseEntity<String> updatePassword(@PathVariable Long id, @RequestBody @Valid PasswordRequestDTO passwordRequestDTO) {
         return ResponseEntity.ok(userService.updatePassword(id, passwordRequestDTO));
     }
-
-
 }
