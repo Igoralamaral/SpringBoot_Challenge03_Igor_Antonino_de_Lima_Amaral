@@ -39,7 +39,7 @@ public class User {
     private String email;
 
     @Column(nullable = false)
-    @Size(min = 6, max = 255, message = "password must have at least 3 characters")
+    @Size(min = 6, max = 255, message = "password must have at least 6 characters")
     private String password;
 
     @Column(nullable = false)
