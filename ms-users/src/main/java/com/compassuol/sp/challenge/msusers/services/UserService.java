@@ -1,21 +1,28 @@
 package com.compassuol.sp.challenge.msusers.services;
 
+import com.compassuol.sp.challenge.msusers.dtos.CredentialsDTO;
+import com.compassuol.sp.challenge.msusers.dtos.TokenDTO;
 import com.compassuol.sp.challenge.msusers.dtos.UserRequestDTO;
 import com.compassuol.sp.challenge.msusers.dtos.UserResponseDTO;
 import com.compassuol.sp.challenge.msusers.entities.User;
 import com.compassuol.sp.challenge.msusers.factories.UserFactory;
 import com.compassuol.sp.challenge.msusers.factories.UserResponseDTOFactory;
 import com.compassuol.sp.challenge.msusers.repositories.UserRepository;
+import com.compassuol.sp.challenge.msusers.securityJwt.JwtService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+
 import static com.compassuol.sp.challenge.msusers.factories.UserFactory.createUserFromDTO;
 import static com.compassuol.sp.challenge.msusers.factories.UserResponseDTOFactory.createResponseUserDTO;
+import static com.compassuol.sp.challenge.msusers.factories.UserResponseDTOFactory.createResponseUserDTOFromOptional;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -29,6 +36,9 @@ public class UserService implements UserDetailsService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private JwtService jwtService;
+
     @Transactional
     public UserResponseDTO createUser(UserRequestDTO userRequestDTO) throws ParseException {
         var user = createUserFromDTO(userRequestDTO);
@@ -39,6 +49,20 @@ public class UserService implements UserDetailsService {
         return userResponseDTO;
     }
 
+    public TokenDTO login(CredentialsDTO credentialsDTO) {
+        try {
+            User user = User.builder().email(credentialsDTO.getEmail()).password(credentialsDTO.getPassword()).build();
+            UserDetails userAuthenticated = authenticate(user);
+            String token = jwtService.tokenGenerate(user);
+            return new TokenDTO(user.getEmail(), token);
+
+        }catch (UsernameNotFoundException e){
+            throw new ResponseStatusException( HttpStatus.UNAUTHORIZED, e.getMessage());
+        }catch (RuntimeException e){
+            throw new RuntimeException("Password invalid");
+        }
+    }
+    
     public UserDetails authenticate(User user) {
         UserDetails userDetails = loadUserByUsername(user.getEmail());
         var equalsPassword = passwordEncoder.matches(user.getPassword(), userDetails.getPassword());
