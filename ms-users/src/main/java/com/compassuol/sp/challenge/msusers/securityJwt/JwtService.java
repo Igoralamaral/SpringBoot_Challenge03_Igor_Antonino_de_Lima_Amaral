@@ -5,7 +5,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import lombok.Value;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -16,8 +16,11 @@ import java.util.Date;
 @Service
 public class JwtService {
 
-    private String expiration = "30";
-    private String passwordKey = "$2a$12$pjQymJnfCySm7DFiHjCMkuclS.GRSA8MZoEGvfiX/4tlOVF12lCaq";
+    @Value("${security.jwt.expiration}")
+    private String expiration;
+
+    @Value("${security.jwt.secret-key}")
+    private String passwordKey;
 
     public String tokenGenerate(User user){
         Long expirationString = Long.valueOf(expiration);

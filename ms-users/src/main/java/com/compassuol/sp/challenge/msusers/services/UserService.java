@@ -28,14 +28,17 @@ import java.text.SimpleDateFormat;
 @Service
 public class UserService implements UserDetailsService {
 
-    @Autowired
     private PasswordEncoder passwordEncoder;
 
-    @Autowired
     private UserRepository userRepository;
 
-    @Autowired
     private JwtService jwtService;
+
+    UserService(PasswordEncoder passwordEncoder, UserRepository userRepository, JwtService jwtService){
+        this.passwordEncoder = passwordEncoder;
+        this.userRepository = userRepository;
+        this.jwtService = jwtService;
+    }
 
     @Transactional
     public UserResponseDTO createUser(UserRequestDTO userRequestDTO) throws ParseException {
@@ -71,6 +74,7 @@ public class UserService implements UserDetailsService {
         throw new RuntimeException("User not found!");
     }
 
+    @Transactional
     public UserResponseDTO updateUserById(Long id, UserRequestDTO userRequestDTO) throws ParseException {
         var user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
         var userUpdated = updateUser(userRequestDTO, user);
@@ -79,6 +83,7 @@ public class UserService implements UserDetailsService {
         return userDTO;
     }
 
+    @Transactional
     public String updatePassword(Long id, PasswordRequestDTO passwordRequestDTO) {
         var user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
         String password = passwordEncoder.encode(passwordRequestDTO.getPassword());
