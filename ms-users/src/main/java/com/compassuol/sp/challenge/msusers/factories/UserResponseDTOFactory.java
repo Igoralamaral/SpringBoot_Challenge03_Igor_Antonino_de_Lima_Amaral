@@ -1,5 +1,6 @@
 package com.compassuol.sp.challenge.msusers.factories;
 
+import com.compassuol.sp.challenge.msusers.dtos.UserRequestDTO;
 import com.compassuol.sp.challenge.msusers.dtos.UserResponseDTO;
 import com.compassuol.sp.challenge.msusers.entities.User;
 

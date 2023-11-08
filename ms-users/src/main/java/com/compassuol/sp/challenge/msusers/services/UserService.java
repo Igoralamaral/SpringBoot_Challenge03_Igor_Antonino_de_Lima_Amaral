@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import static com.compassuol.sp.challenge.msusers.factories.UserFactory.createUserFromDTO;
+import static com.compassuol.sp.challenge.msusers.factories.UserFactory.updateUser;
 import static com.compassuol.sp.challenge.msusers.factories.UserResponseDTOFactory.createResponseUserDTO;
 import static com.compassuol.sp.challenge.msusers.factories.UserResponseDTOFactory.createResponseUserDTOFromOptional;
 
@@ -71,6 +72,14 @@ public class UserService implements UserDetailsService {
         }
 
         throw new RuntimeException("User not found!");
+    }
+
+    public UserResponseDTO updateUserById(Long id, UserRequestDTO userRequestDTO) throws ParseException {
+        var user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+        var userUpdated = updateUser(userRequestDTO, user);
+        userRepository.save(userUpdated);
+        var userDTO = createResponseUserDTO(user);
+        return userDTO;
     }
     
     public UserDetails authenticate(User user) {
