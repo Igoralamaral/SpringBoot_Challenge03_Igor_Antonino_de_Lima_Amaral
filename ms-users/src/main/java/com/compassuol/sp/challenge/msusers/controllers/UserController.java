@@ -1,9 +1,6 @@
 package com.compassuol.sp.challenge.msusers.controllers;
 
-import com.compassuol.sp.challenge.msusers.dtos.CredentialsDTO;
-import com.compassuol.sp.challenge.msusers.dtos.TokenDTO;
-import com.compassuol.sp.challenge.msusers.dtos.UserRequestDTO;
-import com.compassuol.sp.challenge.msusers.dtos.UserResponseDTO;
+import com.compassuol.sp.challenge.msusers.dtos.*;
 import com.compassuol.sp.challenge.msusers.entities.User;
 import com.compassuol.sp.challenge.msusers.securityJwt.JwtService;
 import com.compassuol.sp.challenge.msusers.services.UserService;
@@ -44,6 +41,11 @@ public class UserController {
     @PutMapping("/users/{id}")
     public ResponseEntity<UserResponseDTO> updateUserById(@PathVariable Long id, @RequestBody @Valid  UserRequestDTO userRequestDTO) throws ParseException {
         return ResponseEntity.ok(userService.updateUserById(id, userRequestDTO));
+    }
+
+    @PutMapping("/users/{id}/password")
+    public ResponseEntity<String> updatePassword(@PathVariable Long id, @RequestBody @Valid PasswordRequestDTO passwordRequestDTO) {
+        return ResponseEntity.ok(userService.updatePassword(id, passwordRequestDTO));
     }
 
 

@@ -1,9 +1,6 @@
 package com.compassuol.sp.challenge.msusers.services;
 
-import com.compassuol.sp.challenge.msusers.dtos.CredentialsDTO;
-import com.compassuol.sp.challenge.msusers.dtos.TokenDTO;
-import com.compassuol.sp.challenge.msusers.dtos.UserRequestDTO;
-import com.compassuol.sp.challenge.msusers.dtos.UserResponseDTO;
+import com.compassuol.sp.challenge.msusers.dtos.*;
 import com.compassuol.sp.challenge.msusers.entities.User;
 import com.compassuol.sp.challenge.msusers.factories.UserFactory;
 import com.compassuol.sp.challenge.msusers.factories.UserResponseDTOFactory;
@@ -31,14 +28,17 @@ import java.text.SimpleDateFormat;
 @Service
 public class UserService implements UserDetailsService {
 
-    @Autowired
     private PasswordEncoder passwordEncoder;
 
-    @Autowired
     private UserRepository userRepository;
 
-    @Autowired
     private JwtService jwtService;
+
+    UserService(PasswordEncoder passwordEncoder, UserRepository userRepository, JwtService jwtService){
+        this.passwordEncoder = passwordEncoder;
+        this.userRepository = userRepository;
+        this.jwtService = jwtService;
+    }
 
     @Transactional
     public UserResponseDTO createUser(UserRequestDTO userRequestDTO) throws ParseException {
@@ -74,12 +74,22 @@ public class UserService implements UserDetailsService {
         throw new RuntimeException("User not found!");
     }
 
+    @Transactional
     public UserResponseDTO updateUserById(Long id, UserRequestDTO userRequestDTO) throws ParseException {
         var user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
         var userUpdated = updateUser(userRequestDTO, user);
         userRepository.save(userUpdated);
         var userDTO = createResponseUserDTO(user);
         return userDTO;
+    }
+
+    @Transactional
+    public String updatePassword(Long id, PasswordRequestDTO passwordRequestDTO) {
+        var user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+        String password = passwordEncoder.encode(passwordRequestDTO.getPassword());
+        user.setPassword(password);
+        userRepository.save(user);
+        return "Password updated with success";
     }
     
     public UserDetails authenticate(User user) {

@@ -15,4 +15,8 @@ spring:
   sql:
     init:
       mode: always
+security:
+  jwt:
+    expiration: 30
+    secret-key: aWdvcmFtYXJhbDEyMzQ1Ng==
 
