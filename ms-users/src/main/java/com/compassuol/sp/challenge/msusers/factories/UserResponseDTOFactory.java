@@ -20,7 +20,7 @@ public class UserResponseDTOFactory {
         userResponseDTO.setLastName(user.getLastName());
         userResponseDTO.setCpf(user.getCpf());
         userResponseDTO.setEmail(user.getEmail());
-        DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         String dateFormated = dateFormat.format(user.getBirthdate());
         userResponseDTO.setBirthdate(dateFormated);
         userResponseDTO.setActive(user.getActive());

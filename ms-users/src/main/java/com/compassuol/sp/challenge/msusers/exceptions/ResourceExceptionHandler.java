@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -60,6 +61,14 @@ public class ResourceExceptionHandler {
     }
     @ExceptionHandler(NoSuchElementException.class)
     public ResponseEntity<StandardError> noSuchElementException(NoSuchElementException e, HttpServletRequest request) {
+        StandardError error = new StandardError();
+        error.setStatus(HttpStatus.NOT_FOUND.value());
+        error.setError("ID not found");
+        error.setMessage(e.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+    @ExceptionHandler(UsernameNotFoundException.class)
+    public ResponseEntity<StandardError> usernameNotFoundException(UsernameNotFoundException e, HttpServletRequest request) {
         StandardError error = new StandardError();
         error.setStatus(HttpStatus.NOT_FOUND.value());
         error.setError("ID not found");

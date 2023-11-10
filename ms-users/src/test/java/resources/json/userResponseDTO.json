@@ -1,0 +1,9 @@
+{
+  "id" : 1,
+  "firstName" : "Igor",
+  "lastName" : "Amaral",
+  "cpf" : "112.995.156-14",
+  "birthdate" : "21/03/1994",
+  "email" : "igor@gmail.com",
+  "active" : 1
+}
