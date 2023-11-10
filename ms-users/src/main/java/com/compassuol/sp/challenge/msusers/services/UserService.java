@@ -44,8 +44,8 @@ public class UserService implements UserDetailsService {
         var user = createUserFromDTO(userRequestDTO);
         String password = passwordEncoder.encode(userRequestDTO.getPassword());
         user.setPassword(password);
-        userRepository.save(user);
-        var userResponseDTO = createResponseUserDTO(user);
+        var userSaved = userRepository.save(user);
+        var userResponseDTO = createResponseUserDTO(userSaved);
         return userResponseDTO;
     }
 
@@ -71,18 +71,19 @@ public class UserService implements UserDetailsService {
     public UserResponseDTO updateUserById(Long id, UserRequestDTO userRequestDTO) throws ParseException {
         var user = userRepository.findById(id).get();
         var userUpdated = updateUser(userRequestDTO, user);
-        userRepository.save(userUpdated);
-        var userDTO = createResponseUserDTO(user);
+        var userSaved = userRepository.save(userUpdated);
+        var userDTO = createResponseUserDTO(userSaved);
         return userDTO;
     }
 
     @Transactional
-    public String updatePassword(Long id, PasswordRequestDTO passwordRequestDTO) {
+    public PasswordSucessDTO updatePassword(Long id, PasswordRequestDTO passwordRequestDTO) {
         var user = userRepository.findById(id).get();
         String password = passwordEncoder.encode(passwordRequestDTO.getPassword());
         user.setPassword(password);
         userRepository.save(user);
-        return "Password updated with success";
+        PasswordSucessDTO passwordSucessDTO = new PasswordSucessDTO("Password updated with success");
+        return passwordSucessDTO;
     }
     
     public UserDetails authenticate(User user) {
