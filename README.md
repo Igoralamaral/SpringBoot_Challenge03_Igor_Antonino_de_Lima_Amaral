@@ -9,7 +9,7 @@
 * [Project Developer Person](#Project-Developer-Person)
 
 # Project Description
-  <p>Project created during the Spring Boot Compass Uol back end development stage, as an evaluation parameter for the third challenge of the learning path. The project consists of building microservices that manage users and notifications in mutual communication.</p>
+  <p>Project created during the Spring Boot Compass Uol back end development stage, as an evaluation parameter for the third challenge of the learning path. The project consists of building microservices that manage users and notifications in mutual communication. ms-users is configuring spring security's default security methods with authentication methods via JWT.ms-notification is configured to use messaging via RabbitMQ. Every event that occurs with ms-user such as creating user, logging into the system, changing users or user passwords is saved in a MongoDB database</p>
 
 <p>ms-users - Microservice related to users management in the database.</p>
 <p>ms-notifications - Microservice relating to notifications management in the database.</p>
@@ -24,7 +24,7 @@
 <p>The first step is to clone the project repository containing the microservices.</p>
 
 <p>Link to clone the repository:</p>
-<p>https://github.com/Igoralamaral/SpringBoot_Challenge02_Grupo_Guardioes_de_Java.git</p>
+<p>https://github.com/Igoralamaral/SpringBoot_Challenge03_Igor_Antonino_de_Lima_Amaral.git</p>
 
 <p>With the project on your local machine, you can access the pom.xml file for each project and right-click and access the maven -> load as maven project option</p>
 
