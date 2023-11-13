@@ -4,6 +4,13 @@ spring:
     username: guest
     password: guest
     host: localhost
-
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: notification
+      username: root
+      password: root
+      authentication-database: admin
 server:
   port: 8081
