@@ -15,6 +15,11 @@ spring:
   sql:
     init:
       mode: always
+  rabbitmq:
+    port: 5672
+    password: guest
+    username: guest
+    host: localhost
 security:
   jwt:
     expiration: 30
