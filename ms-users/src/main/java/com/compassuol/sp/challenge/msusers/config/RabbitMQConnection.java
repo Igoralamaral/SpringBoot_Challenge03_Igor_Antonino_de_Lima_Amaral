@@ -15,24 +15,24 @@ public class RabbitMQConnection {
 
     private AmqpAdmin amqpAdmin;
 
-    public RabbitMQConnection(AmqpAdmin amqpAdmin){
+    public RabbitMQConnection(AmqpAdmin amqpAdmin) {
         this.amqpAdmin = amqpAdmin;
     }
 
-    private Queue queue(String queueName){
+    private Queue queue(String queueName) {
         return new Queue(queueName, true, false, false);
     }
 
-    private DirectExchange directExchange(){
+    private DirectExchange directExchange() {
         return new DirectExchange(EXCHANGE_NAME);
     }
 
-    private Binding binding(Queue queue, DirectExchange exchange){
+    private Binding binding(Queue queue, DirectExchange exchange) {
         return new Binding(queue.getName(), Binding.DestinationType.QUEUE, exchange.getName(), queue.getName(), null);
     }
 
     @PostConstruct
-    private void add(){
+    private void add() {
         Queue queueCreate = this.queue(RabbitMQConstants.QUEUE_CREATE);
         Queue queueLogin = this.queue(RabbitMQConstants.QUEUE_LOGIN);
         Queue queueUpdate = this.queue(RabbitMQConstants.QUEUE_UPDATE);

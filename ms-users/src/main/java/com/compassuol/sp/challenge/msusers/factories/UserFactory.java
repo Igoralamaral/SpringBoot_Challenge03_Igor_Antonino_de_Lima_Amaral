@@ -1,12 +1,10 @@
 package com.compassuol.sp.challenge.msusers.factories;
 
 import com.compassuol.sp.challenge.msusers.dtos.UserRequestDTO;
-import com.compassuol.sp.challenge.msusers.dtos.UserResponseDTO;
 import com.compassuol.sp.challenge.msusers.entities.User;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Optional;
 
 public class UserFactory {
 

@@ -3,10 +3,8 @@ package com.compassuol.sp.challenge.msnotification.factories;
 import com.compassuol.sp.challenge.msnotification.dtos.NotificationDTO;
 import com.compassuol.sp.challenge.msnotification.entities.Notification;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class NotificationFactory {
 

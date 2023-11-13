@@ -22,7 +22,7 @@ public class JwtService {
     @Value("${security.jwt.secret-key}")
     private String passwordKey;
 
-    public String tokenGenerate(User user){
+    public String tokenGenerate(User user) {
         Long expirationString = Long.valueOf(expiration);
         LocalDateTime dateTimeExpiration = LocalDateTime.now().plusMinutes(expirationString);
         Instant instant = dateTimeExpiration.atZone(ZoneId.systemDefault()).toInstant();
@@ -36,7 +36,7 @@ public class JwtService {
                 .compact();
     }
 
-    private Claims getClaims(String token ) throws ExpiredJwtException {
+    private Claims getClaims(String token) throws ExpiredJwtException {
         return Jwts
                 .parser()
                 .setSigningKey(passwordKey)
@@ -44,20 +44,20 @@ public class JwtService {
                 .getBody();
     }
 
-    public boolean validToken( String token ){
-        try{
+    public boolean validToken(String token) {
+        try {
             Claims claims = getClaims(token);
             Date expirationDate = claims.getExpiration();
             LocalDateTime date =
                     expirationDate.toInstant()
                             .atZone(ZoneId.systemDefault()).toLocalDateTime();
             return !LocalDateTime.now().isAfter(date);
-        }catch (Exception e){
+        } catch (Exception e) {
             return false;
         }
     }
 
-    public String getUserEmail(String token) throws ExpiredJwtException{
+    public String getUserEmail(String token) throws ExpiredJwtException {
         return (String) getClaims(token).getSubject();
     }
 }

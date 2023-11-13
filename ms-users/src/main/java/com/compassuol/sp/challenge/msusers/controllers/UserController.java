@@ -23,17 +23,17 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<TokenDTO> login(@RequestBody CredentialsDTO credentialsDTO){
+    public ResponseEntity<TokenDTO> login(@RequestBody CredentialsDTO credentialsDTO) {
         return ResponseEntity.ok(userService.login(credentialsDTO));
     }
 
     @GetMapping("/users/{id}")
-    public ResponseEntity<UserResponseDTO> getUserById(@PathVariable Long id){
+    public ResponseEntity<UserResponseDTO> getUserById(@PathVariable Long id) {
         return ResponseEntity.ok(userService.getUserById(id));
     }
 
     @PutMapping("/users/{id}")
-    public ResponseEntity<UserResponseDTO> updateUserById(@PathVariable Long id, @RequestBody @Valid  UserRequestDTO userRequestDTO) throws ParseException {
+    public ResponseEntity<UserResponseDTO> updateUserById(@PathVariable Long id, @RequestBody @Valid UserRequestDTO userRequestDTO) throws ParseException {
         return ResponseEntity.ok(userService.updateUserById(id, userRequestDTO));
     }
 

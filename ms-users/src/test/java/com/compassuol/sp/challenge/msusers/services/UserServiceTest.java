@@ -1,6 +1,9 @@
 package com.compassuol.sp.challenge.msusers.services;
 
-import com.compassuol.sp.challenge.msusers.dtos.*;
+import com.compassuol.sp.challenge.msusers.dtos.PasswordRequestDTO;
+import com.compassuol.sp.challenge.msusers.dtos.PasswordSucessDTO;
+import com.compassuol.sp.challenge.msusers.dtos.UserRequestDTO;
+import com.compassuol.sp.challenge.msusers.dtos.UserResponseDTO;
 import com.compassuol.sp.challenge.msusers.entities.User;
 import com.compassuol.sp.challenge.msusers.factories.UserFactory;
 import com.compassuol.sp.challenge.msusers.factories.UserResponseDTOFactory;
@@ -13,14 +16,14 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
-import static org.assertj.core.api.Assertions.*;
-
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTest {
@@ -118,7 +121,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void updateUserPassword_WithValidId_returnsSuccess() throws IOException {
+    void updateUserPassword_withValidId_returnsSuccess() throws IOException {
         User user = Utils.readFromFile("/json/userEntity.json", User.class);
         PasswordRequestDTO passwordRequestDTO = Utils.readFromFile("/json/passwordRequest.json", PasswordRequestDTO.class);
         PasswordSucessDTO passwordSucessDTO = Utils.readFromFile("/json/passwordResponse.json", PasswordSucessDTO.class);

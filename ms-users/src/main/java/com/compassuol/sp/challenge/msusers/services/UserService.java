@@ -1,9 +1,9 @@
 package com.compassuol.sp.challenge.msusers.services;
 
-import com.compassuol.sp.challenge.msusers.enums.EventsEnum;
 import com.compassuol.sp.challenge.msusers.constants.RabbitMQConstants;
 import com.compassuol.sp.challenge.msusers.dtos.*;
 import com.compassuol.sp.challenge.msusers.entities.User;
+import com.compassuol.sp.challenge.msusers.enums.EventsEnum;
 import com.compassuol.sp.challenge.msusers.exceptions.InvalidCredentials;
 import com.compassuol.sp.challenge.msusers.repositories.UserRepository;
 import com.compassuol.sp.challenge.msusers.securityJwt.JwtService;
@@ -18,10 +18,10 @@ import java.text.ParseException;
 import java.time.Instant;
 import java.util.Date;
 
+import static com.compassuol.sp.challenge.msusers.factories.NotificationFactory.createNotification;
 import static com.compassuol.sp.challenge.msusers.factories.UserFactory.createUserFromDTO;
 import static com.compassuol.sp.challenge.msusers.factories.UserFactory.updateUser;
 import static com.compassuol.sp.challenge.msusers.factories.UserResponseDTOFactory.createResponseUserDTO;
-import static com.compassuol.sp.challenge.msusers.factories.NotificationFactory.createNotification;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -34,7 +34,7 @@ public class UserService implements UserDetailsService {
 
     private RabbitMQService rabbitMQService;
 
-    UserService(PasswordEncoder passwordEncoder, UserRepository userRepository, JwtService jwtService, RabbitMQService rabbitMQService){
+    UserService(PasswordEncoder passwordEncoder, UserRepository userRepository, JwtService jwtService, RabbitMQService rabbitMQService) {
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
         this.jwtService = jwtService;
@@ -62,7 +62,7 @@ public class UserService implements UserDetailsService {
             rabbitMQService.sendMessage(RabbitMQConstants.QUEUE_LOGIN, notification);
             return new TokenDTO(user.getEmail(), token);
 
-        }catch (RuntimeException e){
+        } catch (RuntimeException e) {
             throw new InvalidCredentials(e.getMessage());
         }
     }
@@ -95,7 +95,7 @@ public class UserService implements UserDetailsService {
         PasswordSucessDTO passwordSucessDTO = new PasswordSucessDTO("Password updated with success");
         return passwordSucessDTO;
     }
-    
+
     public UserDetails authenticate(User user) {
         UserDetails userDetails = loadUserByUsername(user.getEmail());
         var equalsPassword = passwordEncoder.matches(user.getPassword(), userDetails.getPassword());

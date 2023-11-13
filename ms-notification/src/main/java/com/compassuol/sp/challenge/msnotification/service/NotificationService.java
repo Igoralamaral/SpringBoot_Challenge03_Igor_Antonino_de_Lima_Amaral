@@ -16,16 +16,16 @@ public class NotificationService {
 
     private final NotificationRepository notificationRepository;
 
-    NotificationService(NotificationRepository notificationRepository){
+    NotificationService(NotificationRepository notificationRepository) {
         this.notificationRepository = notificationRepository;
     }
 
     @RabbitListener(queues = RabbitMQConstants.QUEUE_CREATE)
     private void consumerCreate(NotificationDTO notificationDTO) throws ParseException {
         var notification = NotificationFactory.createNotification(notificationDTO);
-        try{
+        try {
             this.notificationRepository.save(notification);
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
     }
@@ -33,9 +33,9 @@ public class NotificationService {
     @RabbitListener(queues = RabbitMQConstants.QUEUE_LOGIN)
     private void consumerLogin(NotificationDTO notificationDTO) throws ParseException {
         var notification = NotificationFactory.createNotification(notificationDTO);
-        try{
+        try {
             this.notificationRepository.save(notification);
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
     }
@@ -43,9 +43,9 @@ public class NotificationService {
     @RabbitListener(queues = RabbitMQConstants.QUEUE_UPDATE)
     private void consumerUpdate(NotificationDTO notificationDTO) throws ParseException {
         var notification = NotificationFactory.createNotification(notificationDTO);
-        try{
+        try {
             this.notificationRepository.save(notification);
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
     }
@@ -53,9 +53,9 @@ public class NotificationService {
     @RabbitListener(queues = RabbitMQConstants.QUEUE_UPDATE_PASSWORD)
     private void consumerPassword(NotificationDTO notificationDTO) throws ParseException {
         var notification = NotificationFactory.createNotification(notificationDTO);
-        try{
+        try {
             this.notificationRepository.save(notification);
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
     }
