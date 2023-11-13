@@ -95,9 +95,9 @@
 						<exclude>**/dtos/*</exclude>
 						<exclude>**/exceptions/*</exclude>
 						<exclude>**/error/*</exclude>
-						<exclude>**/model/*</exclude>
+						<exclude>**/entities/*</exclude>
 						<exclude>com/compassuol/sp/challenge/msusers/MsUsersApplication.class</exclude>
-						<exclude>**/configuration/*</exclude>
+						<exclude>**/config/*</exclude>
 					</excludes>
 				</configuration>
 				<executions>
