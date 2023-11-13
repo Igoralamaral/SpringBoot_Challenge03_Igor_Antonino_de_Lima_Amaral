@@ -40,6 +40,9 @@ public class UserServiceTest {
     private UserFactory userFactory;
 
     @Mock
+    private RabbitMQService rabbitMQService;
+
+    @Mock
     private UserResponseDTOFactory userResponseDTOFactory;
 
     @Test

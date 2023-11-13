@@ -14,8 +14,8 @@ public class NotificationFactory {
         Notification notification = new Notification();
         notification.setEvent(notificationDTO.getEvent());
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-        var date = dateFormat.parse(notificationDTO.getDate());
-        notification.setDate(date);
+        var dateFormated = dateFormat.parse(notificationDTO.getDate());
+        notification.setDate(dateFormated);
         notification.setEmail(notificationDTO.getEmail());
         return notification;
     }

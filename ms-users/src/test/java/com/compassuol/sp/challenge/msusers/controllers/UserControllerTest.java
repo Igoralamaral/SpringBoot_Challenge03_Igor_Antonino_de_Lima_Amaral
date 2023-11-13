@@ -1,7 +1,6 @@
 package com.compassuol.sp.challenge.msusers.controllers;
 
-import com.compassuol.sp.challenge.msusers.dtos.UserRequestDTO;
-import com.compassuol.sp.challenge.msusers.dtos.UserResponseDTO;
+import com.compassuol.sp.challenge.msusers.dtos.*;
 import com.compassuol.sp.challenge.msusers.securityJwt.JwtAuthFilter;
 import com.compassuol.sp.challenge.msusers.securityJwt.JwtService;
 import com.compassuol.sp.challenge.msusers.services.UserService;
@@ -22,6 +21,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.io.IOException;
 import java.util.NoSuchElementException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -118,7 +118,7 @@ public class UserControllerTest {
     }
 
     @Test
-    void updatedUser_sucess_ReturnsUser() throws Exception {
+    void updatedUser_success_ReturnsUser() throws Exception {
         UserRequestDTO request = Utils.readFromFile("/json/userRequestDTO.json", UserRequestDTO.class);
 
         when(userService.updateUserById(any(), any())).thenReturn(UserResponseDTO.builder().build());
@@ -137,4 +137,44 @@ public class UserControllerTest {
         assertEquals(HttpStatus.OK.value(), response.getStatus());
     }
 
+
+    @Test
+    void loginWithValidCredentials_success_thenReturnToken() throws Exception {
+        CredentialsDTO request = Utils.readFromFile("/json/credentialsRequest.json", CredentialsDTO.class);
+
+        when(userService.login(any())).thenReturn(TokenDTO.builder().build());
+
+        String input = Utils.mapToString(request);
+
+        MvcResult result = mockMvc
+                .perform(MockMvcRequestBuilders.post(LOGIN_URL)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(input)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+
+        MockHttpServletResponse response = result.getResponse();
+
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+    }
+
+    @Test
+    void updatePasswordWithValidData_success_thenReturnPasswordSucess() throws Exception {
+        PasswordRequestDTO request = Utils.readFromFile("/json/passwordRequest.json", PasswordRequestDTO.class);
+
+        when(userService.updatePassword(any(), any())).thenReturn(PasswordSucessDTO.builder().build());
+
+        String input = Utils.mapToString(request);
+
+        MvcResult result = mockMvc
+                .perform(MockMvcRequestBuilders.put(UPDATE_PASSWORD)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(input)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+
+        MockHttpServletResponse response = result.getResponse();
+
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+    }
 }
