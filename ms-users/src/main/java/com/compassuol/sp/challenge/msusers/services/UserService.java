@@ -1,28 +1,27 @@
 package com.compassuol.sp.challenge.msusers.services;
 
+import com.compassuol.sp.challenge.msusers.constants.RabbitMQConstants;
 import com.compassuol.sp.challenge.msusers.dtos.*;
 import com.compassuol.sp.challenge.msusers.entities.User;
 import com.compassuol.sp.challenge.msusers.exceptions.InvalidCredentials;
-import com.compassuol.sp.challenge.msusers.factories.UserFactory;
-import com.compassuol.sp.challenge.msusers.factories.UserResponseDTOFactory;
 import com.compassuol.sp.challenge.msusers.repositories.UserRepository;
 import com.compassuol.sp.challenge.msusers.securityJwt.JwtService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
+
+import java.text.ParseException;
+import java.time.Instant;
+import java.util.Date;
 
 import static com.compassuol.sp.challenge.msusers.factories.UserFactory.createUserFromDTO;
 import static com.compassuol.sp.challenge.msusers.factories.UserFactory.updateUser;
 import static com.compassuol.sp.challenge.msusers.factories.UserResponseDTOFactory.createResponseUserDTO;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import static com.compassuol.sp.challenge.msusers.factories.NotificationFactory.createNotification;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -33,10 +32,13 @@ public class UserService implements UserDetailsService {
 
     private JwtService jwtService;
 
-    UserService(PasswordEncoder passwordEncoder, UserRepository userRepository, JwtService jwtService){
+    private RabbitMQService rabbitMQService;
+
+    UserService(PasswordEncoder passwordEncoder, UserRepository userRepository, JwtService jwtService, RabbitMQService rabbitMQService){
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
         this.jwtService = jwtService;
+        this.rabbitMQService = rabbitMQService;
     }
 
     @Transactional
@@ -46,6 +48,8 @@ public class UserService implements UserDetailsService {
         user.setPassword(password);
         var userSaved = userRepository.save(user);
         var userResponseDTO = createResponseUserDTO(userSaved);
+        var notification = createNotification(userResponseDTO.getEmail(), "CREATE", Date.from(Instant.now()));
+        rabbitMQService.sendMessage(RabbitMQConstants.QUEUE_CREATE, notification);
         return userResponseDTO;
     }
 
@@ -54,6 +58,8 @@ public class UserService implements UserDetailsService {
             User user = User.builder().email(credentialsDTO.getEmail()).password(credentialsDTO.getPassword()).build();
             UserDetails userAuthenticated = authenticate(user);
             String token = jwtService.tokenGenerate(user);
+            var notification = createNotification(user.getEmail(), "LOGIN", Date.from(Instant.now()));
+            rabbitMQService.sendMessage(RabbitMQConstants.QUEUE_LOGIN, notification);
             return new TokenDTO(user.getEmail(), token);
 
         }catch (RuntimeException e){
@@ -73,6 +79,8 @@ public class UserService implements UserDetailsService {
         var userUpdated = updateUser(userRequestDTO, user);
         var userSaved = userRepository.save(userUpdated);
         var userDTO = createResponseUserDTO(userSaved);
+        var notification = createNotification(userSaved.getEmail(), "UPDATE", Date.from(Instant.now()));
+        rabbitMQService.sendMessage(RabbitMQConstants.QUEUE_UPDATE, notification);
         return userDTO;
     }
 
@@ -82,6 +90,8 @@ public class UserService implements UserDetailsService {
         String password = passwordEncoder.encode(passwordRequestDTO.getPassword());
         user.setPassword(password);
         userRepository.save(user);
+        var notification = createNotification(user.getEmail(), "UPDATE_PASSWORD", Date.from(Instant.now()));
+        rabbitMQService.sendMessage(RabbitMQConstants.QUEUE_UPDATE_PASSWORD, notification);
         PasswordSucessDTO passwordSucessDTO = new PasswordSucessDTO("Password updated with success");
         return passwordSucessDTO;
     }
