@@ -1,0 +1,162 @@
+openapi: 3.0.0
+info:
+  title: API documentation of microservice ms-users.
+  description: API to manage users entity in database.
+  version: 1.0.0
+
+tags:
+  - name: Users
+    description: Creation and management of users in the database with password encryption and generation of jwt tokens..
+
+paths:
+  /v1/users:
+    post:
+      summary: Create a new User
+      requestBody:
+        required: true
+        content:
+          application/json:
+            example:
+              firstName: Igor
+              lastName: Amaral
+              email: igor@gmail.com
+              cpf: 112.995.156-14
+              birthdate: 21/03/1994
+              password: 123456
+              active: true
+      responses:
+        '201':
+          description: User created successfully.
+          content:
+            application/json:
+              example:
+                id: 1
+                firstName: Igor
+                lastName: Amaral
+                birthdate: 21/03/1994
+                cpf: 112.995.156-14
+                email: igor@gmail.com
+                active: true
+        '400':
+          description: Integrity violation
+
+  /v1/login:
+    post:
+      summary: Login in application
+      requestBody:
+        required: true
+        content:
+          application/json:
+            example:
+              email: igor@gmail.com
+              password: 123456
+      responses:
+        '200':
+          description: Login with credentials successfully.
+          content:
+            application/json:
+              example:
+                email: igor@gmail.com
+                token: token jwt generated
+        '401':
+          description: Incorrect email or password
+
+  /v1/users/:id:
+    put:
+      summary: Get user by ID
+      parameters:
+        - name: id
+          in: query
+          required: true
+          description: Get an user from database with id parameter
+          schema:
+            type: long
+      responses:
+        '201':
+          description: User returned successfully.
+          content:
+            application/json:
+              example:
+                id: 1
+                firstName: Igor
+                lastName: Amaral
+                birthdate: 21/03/1994
+                cpf: 112.995.156-14
+                email: igor@gmail.com
+                active: true
+        '404':
+          description: ID not found.
+        '403':
+          description: Forbidden
+    patch:
+      summary: Update user by ID
+      parameters:
+        - name: id
+          in: query
+          required: true
+          description: Get an user from database with id parameter and update user data
+          schema:
+            type: long
+      requestBody:
+        required: true
+        content:
+          application/json:
+            example:
+              firstName: Paloma
+              lastName: Amaral
+              email: paloma@gmail.com
+              cpf: 112.995.156-14
+              birthdate: 10/03/1994
+              active: false
+      responses:
+        '200':
+          description: User updated successfully.
+          content:
+            application/json:
+              example:
+                id: 1
+                firstName: Paloma
+                lastName: Amaral
+                birthdate: 10/03/1994
+                cpf: 112.995.156-14
+                email: paloma@gmail.com
+                active: false
+        '404':
+          description: ID not found.
+        '403':
+          description: Forbidden
+        '400':
+          description: Integrity violation
+
+  /v1/users/:id/password:
+    put:
+      summary: Get user by ID and update user password
+    parameters:
+      - name: id
+        in: query
+        required: true
+        description: Get an user from database with id parameter and update user password
+        schema:
+          type: long
+    requestBody:
+      required: true
+      content:
+        application/json:
+          example:
+            password: paloma123
+    responses:
+      '200':
+        description: User updated successfully.
+        content:
+          application/json:
+            example:
+              message: Password updated successfully
+      '404':
+        description: ID not found.
+      '403':
+        description: Forbidden
+      '400':
+        description: Integrity violation
+
+
+

@@ -1,0 +1,27 @@
+server:
+  port: 8300
+spring:
+  application:
+    name: users-service
+  datasource:
+    url: jdbc:mysql://localhost:3306/db_users?createDatabaseIfNotExist=true&serverTimezone=UTC
+    username: root
+    password: root
+  jpa:
+    hibernate:
+      ddl-auto: update
+      defer-datasource-initialization: true
+      show-sql: true
+  sql:
+    init:
+      mode: always
+  rabbitmq:
+    port: 5672
+    password: guest
+    username: guest
+    host: localhost
+security:
+  jwt:
+    expiration: 30
+    secret-key: aWdvcmFtYXJhbDEyMzQ1Ng==
+
