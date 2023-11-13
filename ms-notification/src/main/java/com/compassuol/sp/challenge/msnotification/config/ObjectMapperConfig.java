@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
 public class ObjectMapperConfig {
 
     @Bean
-    public MessageConverter jsonMessageConverter(){
+    public MessageConverter jsonMessageConverter() {
         final ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(new JavaTimeModule());
         return new Jackson2JsonMessageConverter(mapper);

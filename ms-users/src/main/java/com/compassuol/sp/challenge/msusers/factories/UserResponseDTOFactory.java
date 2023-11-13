@@ -1,18 +1,14 @@
 package com.compassuol.sp.challenge.msusers.factories;
 
-import com.compassuol.sp.challenge.msusers.dtos.UserRequestDTO;
 import com.compassuol.sp.challenge.msusers.dtos.UserResponseDTO;
 import com.compassuol.sp.challenge.msusers.entities.User;
 
-import java.sql.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.util.Optional;
 
 public class UserResponseDTOFactory {
 
-    public static UserResponseDTO createResponseUserDTO(User user){
+    public static UserResponseDTO createResponseUserDTO(User user) {
 
         UserResponseDTO userResponseDTO = new UserResponseDTO();
         userResponseDTO.setId(user.getId());
