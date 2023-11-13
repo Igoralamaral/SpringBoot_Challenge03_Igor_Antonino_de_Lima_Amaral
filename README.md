@@ -19,6 +19,8 @@
 + Java 17
 + Spring Boot
 + MySQL
++ RabbitMQ
++ JWT Authentication
 
 # Project Instalation
 <p>The first step is to clone the project repository containing the microservices.</p>
